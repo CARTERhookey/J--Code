@@ -1,192 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>J; Compiler</title>
-<style>
-  body { font-family: monospace; padding: 20px; }
-  textarea { width: 100%; height: 200px; }
-  #screen { border:1px solid black; padding:10px; margin-top:10px; min-height:50px; }
-  button { margin-top: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <title>J; Compiler</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #0f0f0f;
+      color: #00ff9c;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      background: #111;
+      color: #00ff9c;
+      border: 1px solid #00ff9c;
+      padding: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #00ff9c;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #screen {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #00ff9c;
+      min-height: 100px;
+    }
+  </style>
 </head>
 <body>
 
-<h2>J; Compiler</h2>
-<p>Write your J; code below and click "Run J;"</p>
+<h1>J; Playground</h1>
 
-<textarea id="jcode">
-# Example J; program
-code.j;
-x=x
-x=5
-show console x
-show screen "Hello on the screen"
-
-answer=nE/e: 8*9
-show screen answer
-
-loop 3-
-    show console "Looping!"
-    show screen "Screen inside loop"
--
-
-if x>3-
-    show console "x is bigger than 3"
--
+<textarea id="code">
+code.J;
+show screen hi
+nE/e: 8*9
+show screen done
 </textarea>
 
 <br>
 <button onclick="runJ()">Run J;</button>
 
-<div id="screen">
-<h3>Screen Output:</h3>
-</div>
-<details>
-  <summary>Documentation</summary>
-J; syntax
-  <br>
-To make the ide recognize the code, type, code.j;
-  <br>
-Putting information on the screen
-  <br>
-to put text onto the screen type, show screen X
-  <br>
-Putting information in the console
-  <br>
-to put text in the console type, show console X
-  <br>
+<div id="screen"></div>
 
-
-Variables
-  <br>
-this will be really simple because I do not see the point in having different types of variables
-  <br>
-to make a variable type, x=x
-<br>
-
-Loops
-  <br>
-to make a program repeat itself a set number of times type, loop x-(code, no parentheses needed)-
-<br>
-to make a program repeat itself a random number of times type, loop random-(code, no parentheses needed)-
-<br>
-to make a program repeat itself an infinite number of times type, loop infinite-(code, no parentheses needed)-
-
-<br>
-
-Functions
-  <br>
-to make a function type, make functionName-(parameters if any)- -code-
-<br>
-
-Comments
-  <br>
-to make a comment type, Comment: (your comment, no parentheses needed)-
-<br>
-
-Math
-  <br>
-to do basic operations type, nE/e: x*y=z (for multiplication), nE/e: x/y=z (for division), nE/e: x-y=z (for multiplication), x+y=z (for addition)
-  <br>
-nE/e stands for numericalExpression/equation
-<br>
-
-Conditionals
-  <br>
-to type a conditional type,
-  <br>
-if condition-(code if true)-
-<br>
-if condition-(code if true)-else-(code if false)-
-  <br>
-</details>
 <script>
 function runJ() {
-    const code = document.getElementById('jcode').value;
-    const lines = code.split('\n');
-    const screenDiv = document.getElementById('screen');
-    screenDiv.innerHTML = '<h3>Screen Output:</h3>'; // clear screen
-    let jsCode = '';
-    let loopStack = [];
-    let indentStack = [];
+  const input = document.getElementById("code").value.split("\n");
+  const screen = document.getElementById("screen");
+  screen.innerHTML = "";
 
-    for (let line of lines) {
-        line = line.trim();
+  let vars = {};
+  let started = false;
 
-        // Skip empty lines, comments, code.j;
-        if (line === '' || line.startsWith('#') || line.startsWith('Comment:') || line === 'code.j;') continue;
+  for (let rawLine of input) {
+    let line = rawLine.trim();
+    if (line === "") continue;
 
-        // Variables
-        if (/^\w+=/.test(line) && !line.includes('nE/e:')) {
-            jsCode += line + ';\n';
-            continue;
-        }
-
-        // Math nE/e: (with or without assignment)
-        if (line.includes('nE/e:')) {
-            let parts = line.split('=');
-            if (parts.length === 2) {
-                let varName = parts[0].trim();
-                let expr = parts[1].replace('nE/e:', '').trim();
-                jsCode += `${varName} = (${expr});\n`;
-            } else {
-                let expr = line.replace('nE/e:', '').trim();
-                jsCode += `console.log(${expr});\n`;
-            }
-            continue;
-        }
-
-        // Console output
-        if (line.startsWith('show console')) {
-            let output = line.replace('show console', '').trim();
-            jsCode += `console.log(${output});\n`;
-            continue;
-        }
-
-        // Screen output
-        if (line.startsWith('show screen')) {
-            let output = line.replace('show screen', '').trim();
-            jsCode += `document.getElementById('screen').innerHTML += ${output} + "<br>";\n`;
-            continue;
-        }
-
-        // Loops: numeric only
-        if (line.startsWith('loop ')) {
-            let match = line.match(/loop (\d+)-/);
-            if (match) {
-                let count = match[1];
-                jsCode += `for(let i=0;i<${count};i++){\n`;
-                loopStack.push('}');
-                continue;
-            }
-        }
-
-        // Conditionals
-        if (line.startsWith('if ')) {
-            let condition = line.replace('if ', '').replace(/-$/,'').trim();
-            jsCode += `if(${condition}){\n`;
-            indentStack.push('}');
-            continue;
-        }
-
-        // Close loop or conditional
-        if (line === '-') {
-            if (loopStack.length > 0) {
-                jsCode += loopStack.pop() + '\n';
-            } else if (indentStack.length > 0) {
-                jsCode += indentStack.pop() + '\n';
-            }
-            continue;
-        }
-
-        // Unknown lines
-        jsCode += '// Unknown line: ' + line + '\n';
+    // Header
+    if (!started) {
+      if (line === "code.J;") {
+        started = true;
+        continue;
+      } else {
+        screen.innerHTML = "❌ Missing code.J; header";
+        return;
+      }
     }
 
-    console.log('--- Compiled JS ---');
-    console.log(jsCode);
-    eval(jsCode); // run the translated JS
+    // Comment
+    if (line.startsWith("Comment:")) continue;
+
+    // show screen
+    if (line.startsWith("show screen")) {
+      let text = line.replace("show screen", "").trim();
+      screen.innerHTML += text + "<br>";
+      continue;
+    }
+
+    // show console
+    if (line.startsWith("show console")) {
+      let text = line.replace("show console", "").trim();
+      console.log(text);
+      continue;
+    }
+
+    // Math expression
+    if (line.startsWith("nE/e:")) {
+      let expr = line.replace("nE/e:", "").trim();
+      try {
+        let result = eval(expr);
+        screen.innerHTML += result + "<br>";
+      } catch {
+        screen.innerHTML += "❌ Math error<br>";
+      }
+      continue;
+    }
+
+    // Variable assignment
+    if (line.includes("=")) {
+      let parts = line.split("=");
+      let name = parts[0].trim();
+      let value = parts[1].trim();
+
+      if (!isNaN(value)) {
+        vars[name] = Number(value);
+      } else {
+        vars[name] = value;
+      }
+      continue;
+    }
+
+    // Unknown command
+    screen.innerHTML += "❌ Unknown command: " + line + "<br>";
+  }
 }
 </script>
 
