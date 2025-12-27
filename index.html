@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>J; Compiler</title>
+<style>
+  body { font-family: monospace; padding: 20px; }
+  textarea { width: 100%; height: 200px; }
+  #screen { border:1px solid black; padding:10px; margin-top:10px; min-height:50px; }
+  button { margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h2>J; Compiler</h2>
+<p>Write your J; code below and click "Run J;"</p>
+
+<textarea id="jcode">
+code.j;
+show screen "hi"
+</textarea>
+
+<br>
+<button onclick="runJ()">Run J;</button>
+
+<div id="screen">
+<h3>Screen Output:</h3>
+</div>
+
+<script>
+function runJ() {
+    const code = document.getElementById('jcode').value;
+    const lines = code.split('\n');
+    const screenDiv = document.getElementById('screen');
+    screenDiv.innerHTML = '<h3>Screen Output:</h3>'; // clear screen
+    let jsCode = '';
+    let loopStack = [];
+
+    for (let line of lines) {
+        line = line.trim();
+
+        // Skip empty lines
+        if (line === '') continue;
+
+        // Skip comments and code.j; line
+        if (line.startsWith('#') || line.startsWith('Comment:') || line === 'code.j;') continue;
+
+        // Variables: x=x or x=5
+        if (/^\w+=/.test(line)) {
+            jsCode += line + ';\n';
+            continue;
+        }
+
+        // Console output
+        if (line.startsWith('show console')) {
+            let output = line.replace('show console', '').trim();
+            jsCode += `console.log(${output});\n`;
+            continue;
+        }
+
+        // Screen output
+        if (line.startsWith('show screen')) {
+            let output = line.replace('show screen', '').trim();
+            jsCode += `document.getElementById('screen').innerHTML += ${output} + "<br>";\n`;
+            continue;
+        }
+
+        // Loops: numeric only
+        if (line.startsWith('loop ')) {
+            let match = line.match(/loop (\d+)-/);
+            if (match) {
+                let count = match[1];
+                jsCode += `for(let i=0;i<${count};i++){\n`;
+                loopStack.push('}');
+                continue;
+            }
+        }
+
+        // Close loop
+        if (line === '-') {
+            if (loopStack.length > 0) {
+                jsCode += loopStack.pop() + '\n';
+            }
+            continue;
+        }
+
+        // Unknown lines
+        jsCode += '// Unknown line: ' + line + '\n';
+    }
+
+    console.log('--- Compiled JS ---');
+    console.log(jsCode);
+    eval(jsCode); // run the translated JS
+}
+</script>
+
+</body>
+</html>
