@@ -16,8 +16,24 @@
 <p>Write your J; code below and click "Run J;"</p>
 
 <textarea id="jcode">
+# Example J; program
 code.j;
-show screen "hi"
+x=x
+x=5
+show console x
+show screen "Hello on the screen"
+
+answer=nE/e: 8*9
+show screen answer
+
+loop 3-
+    show console "Looping!"
+    show screen "Screen inside loop"
+-
+
+if x>3-
+    show console "x is bigger than 3"
+-
 </textarea>
 
 <br>
@@ -35,19 +51,31 @@ function runJ() {
     screenDiv.innerHTML = '<h3>Screen Output:</h3>'; // clear screen
     let jsCode = '';
     let loopStack = [];
+    let indentStack = [];
 
     for (let line of lines) {
         line = line.trim();
 
-        // Skip empty lines
-        if (line === '') continue;
+        // Skip empty lines, comments, code.j;
+        if (line === '' || line.startsWith('#') || line.startsWith('Comment:') || line === 'code.j;') continue;
 
-        // Skip comments and code.j; line
-        if (line.startsWith('#') || line.startsWith('Comment:') || line === 'code.j;') continue;
-
-        // Variables: x=x or x=5
-        if (/^\w+=/.test(line)) {
+        // Variables
+        if (/^\w+=/.test(line) && !line.includes('nE/e:')) {
             jsCode += line + ';\n';
+            continue;
+        }
+
+        // Math nE/e: (with or without assignment)
+        if (line.includes('nE/e:')) {
+            let parts = line.split('=');
+            if (parts.length === 2) {
+                let varName = parts[0].trim();
+                let expr = parts[1].replace('nE/e:', '').trim();
+                jsCode += `${varName} = (${expr});\n`;
+            } else {
+                let expr = line.replace('nE/e:', '').trim();
+                jsCode += `console.log(${expr});\n`;
+            }
             continue;
         }
 
@@ -76,10 +104,20 @@ function runJ() {
             }
         }
 
-        // Close loop
+        // Conditionals
+        if (line.startsWith('if ')) {
+            let condition = line.replace('if ', '').replace(/-$/,'').trim();
+            jsCode += `if(${condition}){\n`;
+            indentStack.push('}');
+            continue;
+        }
+
+        // Close loop or conditional
         if (line === '-') {
             if (loopStack.length > 0) {
                 jsCode += loopStack.pop() + '\n';
+            } else if (indentStack.length > 0) {
+                jsCode += indentStack.pop() + '\n';
             }
             continue;
         }
