@@ -26,6 +26,7 @@
       color: #00ff9c;
       background: #0a0a0a;
       border-right: 1px solid #00ff9c;
+      min-width: 30px;
     }
 
     /* Code textarea */
@@ -38,6 +39,7 @@
       padding: 10px;
       resize: none;
       outline: none;
+      white-space: pre;
     }
 
     button {
@@ -54,6 +56,25 @@
       padding: 10px;
       border: 1px solid #00ff9c;
       min-height: 100px;
+    }
+
+    details {
+      margin-top: 20px;
+      border: 1px solid #00ff9c;
+      padding: 10px;
+      background: #111;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: #00ff9c;
+    }
+
+    .doc-section-title {
+      color: #00ff9c;
+      font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -74,6 +95,85 @@ show screen done
 <button onclick="runJ()">Run J;</button>
 
 <div id="screen"></div>
+
+<details>
+  <summary>Documentation</summary>
+
+  <div class="doc-section-title">J; syntax</div>
+  To make the IDE recognize the code, type:
+  <br>
+  <code>code.j;</code>
+  <br><br>
+
+  <div class="doc-section-title">Putting information on the screen</div>
+  To put text onto the screen type:
+  <br>
+  <code>show screen X</code>
+  <br><br>
+
+  <div class="doc-section-title">Putting information in the console</div>
+  To put text in the console type:
+  <br>
+  <code>show console X</code>
+  <br><br>
+
+  <div class="doc-section-title">Variables</div>
+  This will be really simple because there are no different types of variables.
+  <br>
+  To make a variable type:
+  <br>
+  <code>x = x</code>
+  <br><br>
+
+  <div class="doc-section-title">Loops</div>
+  To make a program repeat itself a set number of times type:
+  <br>
+  <code>loop x-(code, no parentheses needed)-</code>
+  <br>
+  To make a program repeat itself a random number of times type:
+  <br>
+  <code>loop random-(code, no parentheses needed)-</code>
+  <br>
+  To make a program repeat itself an infinite number of times type:
+  <br>
+  <code>loop infinite-(code, no parentheses needed)-</code>
+  <br><br>
+
+  <div class="doc-section-title">Functions</div>
+  To make a function type:
+  <br>
+  <code>make functionName-(parameters if any)- -code-</code>
+  <br><br>
+
+  <div class="doc-section-title">Comments</div>
+  To make a comment type:
+  <br>
+  <code>Comment: (your comment, no parentheses needed)-</code>
+  <br><br>
+
+  <div class="doc-section-title">Math</div>
+  To do basic operations type:
+  <br>
+  <code>nE/e: x*y = z</code> (for multiplication)
+  <br>
+  <code>nE/e: x/y = z</code> (for division)
+  <br>
+  <code>nE/e: x-y = z</code> (for subtraction)
+  <br>
+  <code>nE/e: x+y = z</code> (for addition)
+  <br>
+  <code>nE/e</code> stands for numericalExpression/equation.
+  <br><br>
+
+  <div class="doc-section-title">Conditionals</div>
+  To type a conditional, type:
+  <br>
+  <code>if condition-(code if true)-</code>
+  <br>
+  Or:
+  <br>
+  <code>if condition-(code if true)-else-(code if false)-</code>
+</details>
 
 <script>
 function updateLineNumbers() {
