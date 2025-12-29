@@ -99,80 +99,154 @@ show screen done
 <details>
   <summary>Documentation</summary>
 
-  <div class="doc-section-title">J; syntax</div>
+  
   To make the IDE recognize the code, type:
   <br>
   <code>code.j;</code>
   <br><br>
 
-  <div class="doc-section-title">Putting information on the screen</div>
-  To put text onto the screen type:
-  <br>
-  <code>show screen X</code>
-  <br><br>
+  <div class="doc-section-title">J; Language Documentation</div>
+Putting information on the screen<br>
+Version 0.1 — Syntax by Carter<br>
+<br>
+------------------------------------------<br>
+1. File Header<br>
+------------------------------------------<br>
+Every J; program must begin with:<br>
+code.J;<br>
+This tells the IDE or compiler that the file contains J; code.<br>
+<br>
+------------------------------------------<br>
+2. Output Commands<br>
+------------------------------------------<br>
+Show text on the screen:<br>
+show screen X<br>
+<br>
+Show text in the console:<br>
+show console X<br>
+<br>
+------------------------------------------<br>
+3. Variables<br>
+------------------------------------------<br>
+J; uses simple assignment with no variable keywords.<br>
+Create or update a variable:<br>
+x = value<br>
+<br>
+------------------------------------------<br>
+4. Loops<br>
+------------------------------------------<br>
+Loop a set number of times:<br>
+loop number-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+Loop a random number of times:<br>
+loop random-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+Loop infinitely:<br>
+loop infinite-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+------------------------------------------<br>
+5. Functions<br>
+------------------------------------------<br>
+Functions use no parentheses and use - to mark blocks.<br>
+<br>
+Function declaration:<br>
+make functionName-parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+Example:<br>
+make greet-name-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;show screen "Hello " + name<br>
+-<br>
+<br>
+Multiple parameters:<br>
+make add-x, y-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return x + y<br>
+-<br>
+<br>
+Anonymous functions:<br>
+func-parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+Assigning an anonymous function:<br>
+double = func-x-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x * 2<br>
+-<br>
+<br>
+Async functions:<br>
+make fetchUser-id async-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;res = await fetch("/user/" + id)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return await res.json()<br>
+-<br>
+<br>
+Return values:<br>
+Explicit return: return value<br>
+Implicit return: last line is returned automatically<br>
+<br>
+------------------------------------------<br>
+6. Comments<br>
+------------------------------------------<br>
+Write a comment using:<br>
+Comment: your comment here-<br>
+<br>
+------------------------------------------<br>
+7. Math<br>
+------------------------------------------<br>
+Math expressions use the nE/e: prefix.<br>
+Examples:<br>
+nE/e: x*y = z<br>
+nE/e: x/y = z<br>
+nE/e: x-y = z<br>
+nE/e: x+y = z<br>
+nE/e stands for numericalExpression/equation.<br>
+<br>
+------------------------------------------<br>
+8. Conditionals<br>
+------------------------------------------<br>
+If statement:<br>
+if condition-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+If / else statement:<br>
+if condition-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-else-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;code<br>
+-<br>
+<br>
+------------------------------------------<br>
+9. Block Structure<br>
+------------------------------------------<br>
+Blocks begin with - after the header and end with a standalone -.<br>
+Example:<br>
+if x > 10-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;show screen "big"<br>
+-<br>
+<br>
+------------------------------------------<br>
+10. Full Example Program<br>
+------------------------------------------<br>
+code.J;<br>
+<br>
+make process-items-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;out = []<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loop items.length-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v = items[i]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if v > 10-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out.push(v)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;out<br>
+-<br>
 
-  <div class="doc-section-title">Putting information in the console</div>
-  To put text in the console type:
-  <br>
-  <code>show console X</code>
-  <br><br>
-
-  <div class="doc-section-title">Variables</div>
-  This will be really simple because there are no different types of variables.
-  <br>
-  To make a variable type:
-  <br>
-  <code>x = x</code>
-  <br><br>
-
-  <div class="doc-section-title">Loops</div>
-  To make a program repeat itself a set number of times type:
-  <br>
-  <code>loop x-(code, no parentheses needed)-</code>
-  <br>
-  To make a program repeat itself a random number of times type:
-  <br>
-  <code>loop random-(code, no parentheses needed)-</code>
-  <br>
-  To make a program repeat itself an infinite number of times type:
-  <br>
-  <code>loop infinite-(code, no parentheses needed)-</code>
-  <br><br>
-
-  <div class="doc-section-title">Functions</div>
-  To make a function type:
-  <br>
-  <code>make functionName-(parameters if any)- -code-</code>
-  <br><br>
-
-  <div class="doc-section-title">Comments</div>
-  To make a comment type:
-  <br>
-  <code>Comment: (your comment, no parentheses needed)-</code>
-  <br><br>
-
-  <div class="doc-section-title">Math</div>
-  To do basic operations type:
-  <br>
-  <code>nE/e: x*y = z</code> (for multiplication)
-  <br>
-  <code>nE/e: x/y = z</code> (for division)
-  <br>
-  <code>nE/e: x-y = z</code> (for subtraction)
-  <br>
-  <code>nE/e: x+y = z</code> (for addition)
-  <br>
-  <code>nE/e</code> stands for numericalExpression/equation.
-  <br><br>
-
-  <div class="doc-section-title">Conditionals</div>
-  To type a conditional, type:
-  <br>
-  <code>if condition-(code if true)-</code>
-  <br>
-  Or:
-  <br>
-  <code>if condition-(code if true)-else-(code if false)-</code>
 </details>
 
 <script>
