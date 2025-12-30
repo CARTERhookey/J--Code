@@ -578,8 +578,37 @@ function runJ() {
       }
 
       // Standalone expression
-      lastValue = evalExpr(line, localVars || {});
+     // Function call (must be checked BEFORE expression eval)
+let callMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s+(.*)$/);
+if (callMatch && functions[callMatch[1]]) {
+    let funcName = callMatch[1];
+    let argString = callMatch[2].trim();
+    let fn = functions[funcName];
+    let argValues = [];
+
+    if (argString.length > 0) {
+        let rawArgs = argString.split(",");
+        for (let a of rawArgs) {
+            argValues.push(evalExpr(a.trim(), localVars || {}));
+        }
     }
+
+    let newScope = {};
+    fn.params.forEach((p, idx) => {
+        newScope[p] = argValues[idx];
+    });
+
+    let res = executeBlock(fn.bodyLines, 0, newScope);
+    if (res && "returned" in res && res.returned) {
+        lastValue = res.lastValue;
+    } else {
+        lastValue = res.lastValue;
+    }
+    continue;
+}
+
+// Standalone expression (fallback)
+lastValue = evalExpr(line, localVars || {});
 
     return { i, lastValue };
   }
